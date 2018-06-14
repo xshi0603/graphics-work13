@@ -180,29 +180,95 @@ def generate_sphere( cx, cy, cz, r, step ):
             #print 'rotation: %d\tcircle%d'%(rotation, circle)
     return points
 
-def add_cone(points, cx0, cy0, cz0, cx1, cy1, cz1, r0, r1, step ):
-    pointys = generate_cone( cx0, cy0, cz0, cx1, cy1, cz1, r0, r1, step )
-    for point in pointys:
-        add_edge(points, x0, y0, 0, x, y, 0)
+def add_pyramid( polygons, x, y, z, height, width):
+    x1 = x + width
+    y1 = y - height
+    z1 = z - width
 
-def generate_cone( cx0, cy0, cz0, cx1, cy1, cz1, r0, r1, step ):
-    points = []
+    x2 = x + width/2
+    y2 = y - height/2
+    z2 = z - width/2
 
-    rot_start = 0
-    rot_stop = step
+    #BASE
+    add_polygon(polygons, x, y, z, x, y, z1, x1, y, z1)
+    add_polygon(polygons, x, y, z, x1, y, z, x1, y, z1)
+    #OTHERS
+    add_polygon(polygons, x, y, z, x, y, z1, x2, y1, z2)
+    add_polygon(polygons, x1, y, z, x, y, z, x2, y1, z2)
+    add_polygon(polygons, x, y, z1, x1, y, z1, x2, y1, z2)
+    add_polygon(polygons, x1, y, z1, x1, y, z, x2, y1, z2)
 
-    for rotation in range(rot_start, rot_stop):
-        rot = rotation/float(step)
-        for circle in range(circ_start, circ_stop+1):
-            circ = circle/float(step)
+def add_rectpyramid( polygons, x, y, z, height, width, depth):
+    x1 = x + width
+    y1 = y - height
+    z1 = z - depth
 
-            x = r * math.cos(math.pi * circ) + cx
-            y = r * math.sin(math.pi * circ) * math.cos(2*math.pi * rot) + cy
-            z = r * math.sin(math.pi * circ) * math.sin(2*math.pi * rot) + cz
+    x2 = x + width/2
+    y2 = y - height/2
+    z2 = z - depth/2
 
-            points.append([x, y, z])
-            #print 'rotation: %d\tcircle%d'%(rotation, circle)
-    return points
+    #BASE
+    add_polygon(polygons, x, y, z, x, y, z1, x1, y, z1)
+    add_polygon(polygons, x, y, z, x1, y, z, x1, y, z1)
+    #OTHERS
+    add_polygon(polygons, x, y, z, x, y, z1, x2, y1, z2)
+    add_polygon(polygons, x1, y, z, x, y, z, x2, y1, z2)
+    add_polygon(polygons, x, y, z1, x1, y, z1, x2, y1, z2)
+    add_polygon(polygons, x1, y, z1, x1, y, z, x2, y1, z2)
+
+
+def add_triprism(polygons, x, y, z, x0, y0, z0, x1, y1, z1, height):
+    
+    add_polygon(polygons, x, y + height, z, x1, y1 + height, z1, x0, y0 + height, z0)    
+    add_polygon(polygons, x, y, z, x0, y0 + height, z0, x0, y0, z0)
+    add_polygon(polygons, x1, y1, z1, x, y + height, z, x, y, z)
+    add_polygon(polygons, x0, y0, z0, x0, y0 + height, z0, x1, y1 + height, z1)
+    add_polygon(polygons, x1, y1, z1, x1, y1 + height, z1, x, y + height, z)
+    add_polygon(polygons, x0, y0, z0, x1, y1 + height, z1, x1, y1, z1)
+    add_polygon(polygons, x, y, z, x, y + height, z, x0, y0 + height, z0)
+    add_polygon(polygons, x, y, z, x0, y0, z0, x1, y1, z1)
+
+def add_cylinder(polygons, cx, cy, cz, r, height, step):
+
+    x = r + cx
+    y = cy
+    z = cz
+    i = 1
+
+    while i <= step:
+
+        t = float(i) / step
+        x1 = cx + r * cos(2 * math.pi * t)
+        z1 = cz + r * sin(2 * math.pi * t)
+
+        add_polygon(polygons, cx, cy, cz,  x1, cy, z1, x, cy, z)
+        add_polygon(polygons, cx, cy + height, cz, x, cy + height, z, x1, cy + height, z1)
+        add_polygon(polygons, x, cy, z, x1, cy, z1, x1, cy + height, z1)
+        add_polygon(polygons, x, cy, z, x1, cy + height, z1, x, cy + height, z)
+    
+        x = x1
+        z = z1        
+        i += 1
+
+def add_cone(polygons, cx, cy, cz, r, h, step ):
+
+    x0 = r + cx;
+    y0 = cy;
+    z0 = cz;
+    i = 1
+
+    while i <= step:
+
+        t = float(i)/step;
+        x1 = cx + r * cos(2 * math.pi * t)
+        z1 = cz + r * sin(2 * math.pi * t)
+
+        add_polygon(polygons, x0, cy, z0, x1, cy, z1, cx, cy + h, cz)
+        add_polygon(polygons, cx, cy, cz,  x1, cy, z1, x0, cy, z0)
+        
+        x0 = x1
+        z0 = z1
+        i += 1
 
 def add_torus( edges, cx, cy, cz, r0, r1, step ):
     points = generate_torus(cx, cy, cz, r0, r1, step)

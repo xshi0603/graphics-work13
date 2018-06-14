@@ -182,6 +182,43 @@ def run(filename):
                 matrix_mult( stack[-1], tmp )
                 draw_polygons(tmp, screen, zbuffer, view, ambient, light, areflect, dreflect, sreflect)
                 tmp = []
+            elif c == 'pyramid':     
+                add_pyramid(tmp,
+                        args[0], args[1], args[2],
+                        args[3], args[4])
+                matrix_mult( stack[-1], tmp )
+                draw_polygons(tmp, screen, zbuffer, view, ambient, light, areflect, dreflect, sreflect)
+                tmp = []
+            elif c == 'triprism':     
+                add_triprism(tmp,
+                        args[0], args[1], args[2],
+                        args[3], args[4], args[5],
+                        args[6], args[7], args[8],
+                        args[9])
+                matrix_mult( stack[-1], tmp )
+                draw_polygons(tmp, screen, zbuffer, view, ambient, light, areflect, dreflect, sreflect)
+                tmp = []
+            elif c == 'rectpyramid':
+                add_rectpyramid(tmp,
+                        args[0], args[1], args[2],
+                        args[3], args[4], args[5])
+                matrix_mult( stack[-1], tmp )
+                draw_polygons(tmp, screen, zbuffer, view, ambient, light, areflect, dreflect, sreflect)
+                tmp = []
+            elif c == 'cylinder':
+                add_cylinder(tmp,
+                        args[0], args[1], args[2],
+                        args[3], args[4], args[5])
+                matrix_mult( stack[-1], tmp )
+                draw_polygons(tmp, screen, zbuffer, view, ambient, light, areflect, dreflect, sreflect)
+                tmp = []
+            elif c == 'cone':
+                add_cone(tmp,
+                        args[0], args[1], args[2],
+                        args[3], args[4], args[5])
+                matrix_mult( stack[-1], tmp )
+                draw_polygons(tmp, screen, zbuffer, view, ambient, light, areflect, dreflect, sreflect)
+                tmp = []
             elif c == 'sphere':
                 add_sphere(tmp,
                            args[0], args[1], args[2], args[3], step_3d)

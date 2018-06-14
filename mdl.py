@@ -38,7 +38,12 @@ tokens = (
     "DISPLAY", 
     "SCREEN", 
     "WEB", 
-    "CO"
+    "CO",
+    "PYRAMID",
+    "RECTPYRAMID",
+    "TRIPRISM",
+    "CYLINDER", 
+    "CONE"
 )
 
 reserved = {
@@ -79,7 +84,12 @@ reserved = {
     "setknobs" : "SET_KNOBS",
     "focal" : "FOCAL",
     "display" : "DISPLAY",
-    "web" : "WEB"
+    "web" : "WEB",
+    "pyramid" : "PYRAMID",
+    "rectpyramid" : "RECTPYRAMID",
+    "triprism" : "TRIPRISM",
+    "cylinder" : "CYLINDER",
+    "cone" : "CONE"
 }
 
 t_ignore = " \t"
@@ -161,6 +171,91 @@ def p_command_save(p):
 def p_command_show(p):
     """command : DISPLAY"""
     commands.append({'op' : p[1], 'args' : None})
+
+def p_command_pyramid(p):
+    """command : PYRAMID NUMBER NUMBER NUMBER NUMBER NUMBER
+               | PYRAMID NUMBER NUMBER NUMBER NUMBER NUMBER SYMBOL
+               | PYRAMID SYMBOL NUMBER NUMBER NUMBER NUMBER NUMBER
+               | PYRAMID SYMBOL NUMBER NUMBER NUMBER NUMBER NUMBER SYMBOL"""
+    cmd = {'op' : p[1], 'constants' : None, 'cs' : None, 'args':[]}
+    arg_start = 2
+    if isinstance(p[2], str):
+        cmd['constants'] = p[2]
+        arg_start = 3
+    if len(p) == 8 and isinstance(p[7], str):
+        cmd['cs'] = p[7]
+    if len(p) == 9 and isinstance(p[8], str):
+        cmd['cs'] = p[8]
+    cmd['args'] = p[arg_start:arg_start+5]
+    commands.append(cmd)
+
+def p_command_rectpyramid(p):
+    """command : RECTPYRAMID NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER
+               | RECTPYRAMID NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER SYMBOL
+               | RECTPYRAMID SYMBOL NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER
+               | RECTPYRAMID SYMBOL NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER SYMBOL"""
+    cmd = {'op' : p[1], 'constants' : None, 'cs' : None, 'args':[]}
+    arg_start = 2
+    if isinstance(p[2], str):
+        cmd['constants'] = p[2]
+        arg_start = 3
+    if len(p) == 8 and isinstance(p[7], str):
+        cmd['cs'] = p[7]
+    if len(p) == 9 and isinstance(p[8], str):
+        cmd['cs'] = p[8]
+    cmd['args'] = p[arg_start:arg_start+6]
+    commands.append(cmd)
+
+def p_command_triprism(p):
+    """command : TRIPRISM NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER
+               | TRIPRISM NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER SYMBOL
+               | TRIPRISM NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER
+               | TRIPRISM NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER SYMBOL"""
+    cmd = {'op' : p[1], 'constants' : None, 'cs' : None, 'args':[]}
+    arg_start = 2
+    if isinstance(p[2], str):
+        cmd['constants'] = p[2]
+        arg_start = 3
+    if len(p) == 13 and isinstance(p[12], str):
+        cmd['cs'] = p[12]
+    if len(p) == 14 and isinstance(p[13], str):
+        cmd['cs'] = p[13]
+    cmd['args'] = p[arg_start:arg_start+10]
+    commands.append(cmd)
+
+def p_command_cylinder(p):
+    """command : CYLINDER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER
+               | CYLINDER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER SYMBOL
+               | CYLINDER SYMBOL NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER
+               | CYLINDER SYMBOL NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER SYMBOL"""
+    cmd = {'op' : p[1], 'constants' : None, 'cs' : None, 'args':[]}
+    arg_start = 2
+    if isinstance(p[2], str):
+        cmd['constants'] = p[2]
+        arg_start = 3
+    if len(p) == 8 and isinstance(p[7], str):
+        cmd['cs'] = p[7]
+    if len(p) == 9 and isinstance(p[8], str):
+        cmd['cs'] = p[8]
+    cmd['args'] = p[arg_start:arg_start+6]
+    commands.append(cmd)
+
+def p_command_cone(p):
+    """command : CONE NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER
+               | CONE NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER SYMBOL
+               | CONE SYMBOL NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER
+               | CONE SYMBOL NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER SYMBOL"""
+    cmd = {'op' : p[1], 'constants' : None, 'cs' : None, 'args':[]}
+    arg_start = 2
+    if isinstance(p[2], str):
+        cmd['constants'] = p[2]
+        arg_start = 3
+    if len(p) == 8 and isinstance(p[7], str):
+        cmd['cs'] = p[7]
+    if len(p) == 9 and isinstance(p[8], str):
+        cmd['cs'] = p[8]
+    cmd['args'] = p[arg_start:arg_start+6]
+    commands.append(cmd)
 
 def p_command_sphere(p):
     """command : SPHERE NUMBER NUMBER NUMBER NUMBER
